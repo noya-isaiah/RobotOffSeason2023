@@ -12,4 +12,6 @@ public class IntakeConstants {
 
     public static final double intakeConePower = 0;//TODO
     public static final double intakeCubePower = 0;//TODO
+    public static final double ejectConsePower = 0;//TODO
+    public static final double ejectCubePower = 0;//TODO
 }

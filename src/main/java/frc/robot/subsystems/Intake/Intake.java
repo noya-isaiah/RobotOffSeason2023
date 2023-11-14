@@ -9,7 +9,7 @@ import com.ma5951.utils.subsystem.MotorSubsystem;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.PortMap;
 
 public class Intake implements MotorSubsystem {
@@ -18,18 +18,20 @@ public class Intake implements MotorSubsystem {
 
   private static Intake instance;
 
-  private DigitalOutput sensor;
+  private DigitalInput sensor;
 
   private MAShuffleboard shuffleboard;
 
-  private boolean isCone;
+  private boolean isCone = false;
+  private boolean isCube = false;
 
-  private boolean isCube;
+  private boolean intakeCone = false;
+  private boolean intakeCube = false;
 
   
   public Intake() {
     intakeMotor = new CANSparkMax(PortMap.Intake.intakeMotorID, MotorType.kBrushless);
-    sensor = new DigitalOutput(PortMap.Intake.intakeSensorChannel);
+    sensor = new DigitalInput(PortMap.Intake.intakeSensorChannel);
 
     shuffleboard = new MAShuffleboard(IntakeConstants.shuffleboardTabName);
   }
@@ -62,6 +64,24 @@ public class Intake implements MotorSubsystem {
 
   public boolean isGamePiece(){
     return isCube() || isCone();
+  }
+
+  public void intakeCone(){
+    intakeCube = false;
+    intakeCone = true;
+  }
+
+  public void intakeCube(){
+    intakeCone = false;
+    intakeCube = true;
+  }
+
+  public boolean intakeConetate(){
+    return intakeCone;
+  }
+
+  public boolean intakeCubeState(){
+    return intakeCube;
   }
 
   public static Intake getInstance(){

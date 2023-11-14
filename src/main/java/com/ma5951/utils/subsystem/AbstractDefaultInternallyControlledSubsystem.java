@@ -19,7 +19,7 @@ implements DefaultInternallyControlledSubsystem{
         this.setPoint = setPoint;
     }
 
-    public boolean atPoint(){
+    public boolean atPoint(double tolerance){
         return Math.abs(getMeasurement() - setPoint) <= this.tolerance;
     }
 }
