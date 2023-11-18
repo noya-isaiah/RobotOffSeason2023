@@ -29,8 +29,6 @@ public class RobotContainer {
   private void configureBindings() {
     
     //robot driver buttons
-    DRIVER_PS4_CONTROLLER.povUp().whileTrue(new StateRunner(RobotStates.ElevatorStates.elevatorStates));//settingElevator
-    DRIVER_PS4_CONTROLLER.circle().whileTrue(new StateRunner(RobotStates.IntakeStates.intakeStates));//setting intake
     DRIVER_PS4_CONTROLLER.cross().whileTrue(new ResetElevator());//reset elevator
 
 

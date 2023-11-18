@@ -38,7 +38,7 @@ public class Intake implements MotorSubsystem {
 
   @Override
   public boolean canMove() {
-    return !isGamePiece();
+    return true;
   }
 
   @Override
@@ -76,7 +76,7 @@ public class Intake implements MotorSubsystem {
     intakeCube = true;
   }
 
-  public boolean intakeConetate(){
+  public boolean intakeConeState(){
     return intakeCone;
   }
 

@@ -5,7 +5,7 @@
 package frc.robot.subsystems.elevator;
 
 import com.ma5951.utils.MAShuffleboard;
-import com.ma5951.utils.subsystem.AbstractDefaultInternallyControlledSubsystem;
+import com.ma5951.utils.subsystem.DefaultInternallyControlledSubsystem;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -16,7 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.PortMap;
 
 
-public class Elevator extends AbstractDefaultInternallyControlledSubsystem {
+public class Elevator implements DefaultInternallyControlledSubsystem {
 
   private CANSparkMax firstElevatorMotor;
   private CANSparkMax secondElevatorMotor;
@@ -30,6 +30,8 @@ public class Elevator extends AbstractDefaultInternallyControlledSubsystem {
   private MAShuffleboard shuffleboard;
 
   private boolean isElevatorClose;
+
+  private double setPoint;
 
 
   public Elevator() {
@@ -61,17 +63,22 @@ public class Elevator extends AbstractDefaultInternallyControlledSubsystem {
     shuffleboard = new MAShuffleboard(ElevatorConstants.shuffleboardTabName);
   }
 
-  @Override
   public void calculate(double setPoint) {
     pid.setReference(getSetPoint(),ControlType.kPosition);
   }
 
-  @Override
-  public double getMeasurement() {
+  public void setSetPoint(double setPoint){
+    this.setPoint = setPoint;
+  }
+
+  public double getSetPoint(){
+    return this.setPoint;
+  } 
+  
+  public double getPosition() {
     return encoder.getPosition();
   }
 
-  @Override
   public void setVoltage(double voltage) {
     firstElevatorMotor.setVoltage(voltage);;
   }
@@ -80,14 +87,18 @@ public class Elevator extends AbstractDefaultInternallyControlledSubsystem {
     encoder.setPosition(0);
   }
 
+  public boolean atPoint(){
+    return Math.abs(getPosition() - setPoint) <= ElevatorConstants.tolerance;
+  }
+
   public boolean isElevatorClose(){
     return isElevatorClose;
   }
 
-  @Override
   public boolean canMove() {
     return !isElevatorClose();//TODO add limitsPos
   }
+
 
   public static Elevator getInstance(){
     if(instance == null){
@@ -96,14 +107,13 @@ public class Elevator extends AbstractDefaultInternallyControlledSubsystem {
     return instance;
   }
 
-  @Override
   public void periodic() {
     if(firstElevatorMotor.getOutputCurrent() > ElevatorConstants.closedElevatorCurrentJump){
       isElevatorClose = true;
     }
 
     shuffleboard.addBoolean("isElevatorClose", isElevatorClose);
-    shuffleboard.addNum("position", getMeasurement());
-    shuffleboard.addBoolean("atPoint", atPoint(ElevatorConstants.tolerance));
+    shuffleboard.addNum("position", getPosition());
+    shuffleboard.addBoolean("atPoint", atPoint());
   }
 }

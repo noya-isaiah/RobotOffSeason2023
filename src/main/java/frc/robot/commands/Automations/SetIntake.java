@@ -6,7 +6,9 @@ package frc.robot.commands.Automations;
 
 import com.ma5951.utils.commands.MotorCommand;
 
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Intake.Intake;
 
 
@@ -14,7 +16,9 @@ public class SetIntake extends SequentialCommandGroup {
 
   public SetIntake(double power) {
     addCommands(
-      new MotorCommand(Intake.getInstance(),power, 0)
+      new ParallelDeadlineGroup(new WaitUntilCommand(Intake.getInstance()::isGamePiece), 
+                                new MotorCommand(Intake.getInstance(),power, 0))
+      
     );
   }
 }
